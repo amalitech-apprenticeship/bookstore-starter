@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bookstore</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1 class="brand">Bookstore</h1>
+      <div id="health" class="health" data-state="checking" role="status" aria-live="polite">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="health-text">Checking API…</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container layout">
+    <section class="card" aria-labelledby="books-heading">
+      <div class="card-head">
+        <h2 id="books-heading">Books</h2>
+        <button id="refresh-books" class="btn btn-ghost" type="button">Refresh</button>
+      </div>
+      <p id="books-status" class="muted" role="status">Loading books…</p>
+      <ul id="book-list" class="book-list"></ul>
+    </section>
+
+    <section class="card" aria-labelledby="order-heading">
+      <h2 id="order-heading">Place an order</h2>
+      <form id="order-form" novalidate>
+        <label for="book-select">Book</label>
+        <select id="book-select" name="bookId" required>
+          <option value="">Loading…</option>
+        </select>
+
+        <label for="quantity">Quantity</label>
+        <input id="quantity" name="quantity" type="number" min="1" step="1" value="1" inputmode="numeric" required>
+
+        <button id="order-submit" class="btn btn-primary" type="submit">Place order</button>
+      </form>
+
+      <div id="order-result" class="result" role="status" aria-live="polite" hidden></div>
+    </section>
+  </main>
+
+  <footer class="container footer muted">
+    Served by Express from <code>public/</code> · API on the same origin
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
