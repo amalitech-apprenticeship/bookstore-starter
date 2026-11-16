@@ -3,13 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Browse the catalog and place an order.">
   <title>Bookstore</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232f5d50'/%3E%3Cpath d='M9 8h9a5 5 0 0 1 5 5v11H14a5 5 0 0 1-5-5z' fill='%23fff'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <h1 class="brand">Bookstore</h1>
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true"></span>
+        Bookstore
+      </a>
       <div id="health" class="health" data-state="checking" role="status" aria-live="polite">
         <span class="dot" aria-hidden="true"></span>
         <span id="health-text">Checking API…</span>
@@ -17,36 +22,66 @@
     </div>
   </header>
 
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Catalog</p>
+      <h1>Find your next read</h1>
+      <p class="lede">Browse what's on the shelf, check live stock, and order in a few clicks.</p>
+    </div>
+  </section>
+
   <main class="container layout">
-    <section class="card" aria-labelledby="books-heading">
-      <div class="card-head">
-        <h2 id="books-heading">Books</h2>
-        <button id="refresh-books" class="btn btn-ghost" type="button">Refresh</button>
+    <section aria-labelledby="books-heading">
+      <div class="section-head">
+        <div>
+          <h2 id="books-heading">All books</h2>
+          <p id="books-count" class="muted small"></p>
+        </div>
+        <button id="refresh-books" class="btn btn-secondary" type="button">
+          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path d="M16 10a6 6 0 1 1-1.76-4.24M16 4v3.5h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Refresh
+        </button>
       </div>
-      <p id="books-status" class="muted" role="status">Loading books…</p>
-      <ul id="book-list" class="book-list"></ul>
+      <p id="books-status" class="status-msg" role="status">Loading books…</p>
+      <ul id="book-list" class="book-grid"></ul>
     </section>
 
-    <section class="card" aria-labelledby="order-heading">
+    <aside class="panel" aria-labelledby="order-heading">
       <h2 id="order-heading">Place an order</h2>
       <form id="order-form" novalidate>
-        <label for="book-select">Book</label>
-        <select id="book-select" name="bookId" required>
-          <option value="">Loading…</option>
-        </select>
+        <div class="field">
+          <label id="book-label" for="book-picker">Book</label>
+          <div class="picker">
+            <button id="book-picker" class="picker-button" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="picker-list">
+              <span id="picker-value" class="picker-value"><span class="picker-placeholder">Loading…</span></span>
+              <svg class="chevron" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 7.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <ul id="picker-list" class="picker-list" role="listbox" aria-labelledby="book-label" tabindex="-1" hidden></ul>
+          </div>
+        </div>
 
-        <label for="quantity">Quantity</label>
-        <input id="quantity" name="quantity" type="number" min="1" step="1" value="1" inputmode="numeric" required>
+        <div class="field">
+          <label for="quantity">Quantity</label>
+          <input id="quantity" name="quantity" type="number" min="1" step="1" value="1" inputmode="numeric" required>
+        </div>
+
+        <div class="summary">
+          <span>Estimated total</span>
+          <strong id="order-total">—</strong>
+        </div>
 
         <button id="order-submit" class="btn btn-primary" type="submit">Place order</button>
       </form>
 
       <div id="order-result" class="result" role="status" aria-live="polite" hidden></div>
-    </section>
+    </aside>
   </main>
 
-  <footer class="container footer muted">
-    Served by Express from <code>public/</code> · API on the same origin
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Bookstore</span>
+      <span class="muted">Prices in USD · Stock updates live</span>
+    </div>
   </footer>
 
   <script src="app.js"></script>
