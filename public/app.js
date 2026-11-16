@@ -120,9 +120,14 @@ function bookCard(book) {
   const footer = el('div', 'book-footer');
   footer.append(el('span', 'book-price', money.format(book.price)), badge);
 
-  const choose = el('button', 'btn btn-secondary btn-block', book.stock === 0 ? 'Unavailable' : 'Select');
+  if (book.stock === 0) {
+    body.append(footer, requestButton(book));
+    li.append(cover, body);
+    return li;
+  }
+
+  const choose = el('button', 'btn btn-secondary btn-block', 'Select');
   choose.type = 'button';
-  choose.disabled = book.stock === 0;
   choose.addEventListener('click', () => {
     selectBook(book.id);
     els.quantity.focus();
@@ -131,6 +136,39 @@ function bookCard(book) {
   body.append(footer, choose);
   li.append(cover, body);
   return li;
+}
+
+// Sold-out books get a "Request this book" button that calls POST /request-books.
+// That endpoint always fails on purpose (dummy route for error-rate testing),
+// so the button shows the error inline and lets the user try again.
+function requestButton(book) {
+  const wrap = el('div', 'request');
+  const btn = el('button', 'btn btn-secondary btn-block', 'Request this book');
+  btn.type = 'button';
+  const note = el('p', 'request-note');
+  note.setAttribute('role', 'status');
+  note.hidden = true;
+
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    btn.textContent = 'Sending request…';
+    note.hidden = true;
+    try {
+      await api('/request-books', { method: 'POST', body: JSON.stringify({ bookId: book.id }) });
+      note.className = 'request-note ok';
+      note.textContent = "Request sent. We'll restock soon.";
+    } catch (err) {
+      note.className = 'request-note error';
+      note.textContent = `Couldn't send request (${err.status || 'network error'}). Try again.`;
+    } finally {
+      note.hidden = false;
+      btn.disabled = false;
+      btn.textContent = 'Request this book';
+    }
+  });
+
+  wrap.append(btn, note);
+  return wrap;
 }
 
 function renderBooks() {

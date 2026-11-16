@@ -57,6 +57,14 @@ function createApp({ store = createStore() } = {}) {
     res.status(201).json(store.createOrder(book, quantity));
   });
 
+  // Dummy endpoint for sold-out books. It always fails with a 500 on purpose,
+  // so it can be used to push the server error rate up when testing monitoring
+  // and alerts.
+  app.post('/request-books', (req, res) => {
+    const { bookId } = req.body || {};
+    throw new Error(`Restock request failed for book ${bookId} (intentional error)`);
+  });
+
   // Unknown API routes get JSON, not Express's default HTML page.
   app.use((req, res) => {
     res.status(404).json({ error: `Route ${req.method} ${req.path} not found` });

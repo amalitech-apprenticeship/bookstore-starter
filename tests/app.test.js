@@ -137,3 +137,13 @@ test('POST /orders returns 409 when stock is insufficient', async () => {
   const orders = await (await fetch(`${baseUrl}/orders`)).json();
   assert.equal(orders.length, 0);
 });
+
+test('POST /request-books always fails with 500 (intentional dummy error)', async () => {
+  const res = await fetch(`${baseUrl}/request-books`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ bookId: 1 }),
+  });
+  assert.equal(res.status, 500);
+  assert.deepEqual(await res.json(), { error: 'Internal server error' });
+});
